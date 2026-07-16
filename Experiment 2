@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Table Creation</title>
+    <style>
+        table{
+            border-collapse: collapse;
+            width: 60%;
+            margin: auto;
+        }
+        th, td{
+            border: 2px solid black;
+            padding: 10px;
+            text-align: center;
+        }
+        th{
+            background-color: lightblue;
+        }
+        h2{
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<h2>Student Details</h2>
+
+<table>
+    <tr>
+        <th>S.No</th>
+        <th>Name</th>
+        <th>Department</th>
+        <th>Marks</th>
+    </tr>
+
+    <tr>
+        <td>1</td>
+        <td>Gnaneswari</td>
+        <td>CSE-AI</td>
+        <td>95</td>
+    </tr>
+
+    <tr>
+        <td>2</td>
+        <td>Rahul</td>
+        <td>CSE</td>
+        <td>90</td>
+    </tr>
+
+    <tr>
+        <td>3</td>
+        <td>Priya</td>
+        <td>ECE</td>
+        <td>88</td>
+    </tr>
+
+</table>
+
+</body>
+</html>
