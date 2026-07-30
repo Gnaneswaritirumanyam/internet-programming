@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Hotel Room Booking</title>
+
+    <style>
+        body {
+            font-family: Arial;
+            background: #eeeeee;
+            text-align: center;
+        }
+
+        .box {
+            width: 420px;
+            margin: 25px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 0 10px gray;
+        }
+
+        input, select, textarea {
+            width: 90%;
+            padding: 9px;
+            margin: 7px;
+        }
+
+        button {
+            padding: 10px 18px;
+            margin: 5px;
+            border: none;
+            background: darkblue;
+            color: white;
+            cursor: pointer;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        h1, h2 {
+            color: darkblue;
+        }
+
+        #result, #reviewResult {
+            margin-top: 15px;
+            color: green;
+            font-weight: bold;
+        }
+    </style>
+
+    <script>
+        var registeredEmail = "";
+        var registeredPassword = "";
+        var roomPrice = 0;
+
+        function showPage(pageId) {
+            document.getElementById("signup").classList.add("hidden");
+            document.getElementById("login").classList.add("hidden");
+            document.getElementById("booking").classList.add("hidden");
+            document.getElementById("review").classList.add("hidden");
+
+            document.getElementById(pageId).classList.remove("hidden");
+        }
+
+        function signupUser() {
+            var name = document.getElementById("signupName").value;
+            var email = document.getElementById("signupEmail").value;
+            var password = document.getElementById("signupPassword").value;
+
+            if (name == "" || email == "" || password == "") {
+                alert("Please fill all signup details");
+                return;
+            }
+
+            registeredEmail = email;
+            registeredPassword = password;
+
+            alert("Signup Successful");
+            showPage("login");
+        }
+
+        function loginUser() {
+            var email = document.getElementById("loginEmail").value;
+            var password = document.getElementById("loginPassword").value;
+
+            if (email == registeredEmail && password == registeredPassword) {
+                alert("Login Successful");
+                showPage("booking");
+            } else {
+                alert("Invalid Email or Password");
+            }
+        }
+
+        function changePrice() {
+            var room = document.getElementById("roomType").value;
+
+            if (room == "Standard Room")
+                roomPrice = 2000;
+            else if (room == "Deluxe Room")
+                roomPrice = 3500;
+            else if (room == "Executive Room")
+                roomPrice = 5000;
+            else if (room == "Suite Room")
+                roomPrice = 7000;
+
+            document.getElementById("price").innerHTML =
+                "Room Price: ₹" + roomPrice + " per day";
+        }
+
+        function bookRoom() {
+            var guestName = document.getElementById("guestName").value;
+            var room = document.getElementById("roomType").value;
+            var checkin = document.getElementById("checkin").value;
+            var checkout = document.getElementById("checkout").value;
+            var guests = document.getElementById("guests").value;
+
+            if (guestName == "" || checkin == "" || checkout == "" || guests == "") {
+                alert("Please fill all booking details");
+                return;
+            }
+
+            var inDate = new Date(checkin);
+            var outDate = new Date(checkout);
+
+            var days = (outDate - inDate) / (1000 * 60 * 60 * 24);
+
+            if (days <= 0) {
+                alert("Checkout date must be after check-in date");
+                return;
+            }
+
+            var total = days * roomPrice;
+
+            document.getElementById("result").innerHTML =
+                "Booking Successful!<br>" +
+                "Guest Name: " + guestName + "<br>" +
+                "Room Type: " + room + "<br>" +
+                "Number of Days: " + days + "<br>" +
+                "Guests: " + guests + "<br>" +
+                "Total Price: ₹" + total;
+
+            document.getElementById("reviewButton").classList.remove("hidden");
+        }
+
+        function submitReview() {
+            var rating = document.getElementById("rating").value;
+            var comment = document.getElementById("comment").value;
+
+            if (comment == "") {
+                alert("Please enter your review");
+                return;
+            }
+
+            document.getElementById("reviewResult").innerHTML =
+                "Thank you for your review!<br>" +
+                "Rating: " + rating + "/5<br>" +
+                "Review: " + comment;
+        }
+    </script>
+</head>
+
+<body>
+
+<h1>Online Hotel Room Booking System</h1>
+
+<div id="signup" class="box">
+    <h2>Signup</h2>
+
+    <input type="text" id="signupName" placeholder="Enter Name"><br>
+    <input type="email" id="signupEmail" placeholder="Enter Email"><br>
+    <input type="password" id="signupPassword" placeholder="Enter Password"><br>
+
+    <button onclick="signupUser()">Signup</button>
+    <button onclick="showPage('login')">Already Have Account</button>
+</div>
+
+<div id="login" class="box hidden">
+    <h2>Login</h2>
+
+    <input type="email" id="loginEmail" placeholder="Enter Email"><br>
+    <input type="password" id="loginPassword" placeholder="Enter Password"><br>
+
+    <button onclick="loginUser()">Login</button>
+    <button onclick="showPage('signup')">Signup</button>
+</div>
+
+<div id="booking" class="box hidden">
+    <h2>Book a Room</h2>
+
+    <input type="text" id="guestName" placeholder="Guest Name"><br>
+
+    <select id="roomType" onchange="changePrice()">
+        <option value="">Select Room Type</option>
+        <option>Standard Room</option>
+        <option>Deluxe Room</option>
+        <option>Executive Room</option>
+        <option>Suite Room</option>
+    </select>
+
+    <p id="price">Room Price: ₹0 per day</p>
+
+    <label>Check-in Date</label><br>
+    <input type="date" id="checkin"><br>
+
+    <label>Check-out Date</label><br>
+    <input type="date" id="checkout"><br>
+
+    <input type="number" id="guests" placeholder="Number of Guests" min="1"><br>
+
+    <button onclick="bookRoom()">Book Room</button>
+
+    <div id="result"></div>
+
+    <button id="reviewButton" class="hidden"
+            onclick="showPage('review')">
+        Give Review
+    </button>
+</div>
+
+<div id="review" class="box hidden">
+    <h2>Hotel Review</h2>
+
+    <select id="rating">
+        <option value="5">5 - Excellent</option>
+        <option value="4">4 - Very Good</option>
+        <option value="3">3 - Good</option>
+        <option value="2">2 - Average</option>
+        <option value="1">1 - Poor</option>
+    </select>
+
+    <textarea id="comment"
+              placeholder="Enter your review"></textarea><br>
+
+    <button onclick="submitReview()">Submit Review</button>
+
+    <div id="reviewResult"></div>
+</div>
+
+</body>
+</html>
