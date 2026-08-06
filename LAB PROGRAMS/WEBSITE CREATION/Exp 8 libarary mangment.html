@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Library Management System</title>
+
+    <style>
+        body {
+            font-family: Arial;
+            background-color: #e6f2ff;
+        }
+
+        .box {
+            width: 400px;
+            margin: 30px auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px gray;
+        }
+
+        h2 {
+            text-align: center;
+            color: darkblue;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 8px;
+            margin: 8px 0;
+            box-sizing: border-box;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            background-color: darkblue;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: blue;
+        }
+
+        #result {
+            margin-top: 15px;
+            color: green;
+            text-align: center;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="box">
+
+    <h2>Library Management System</h2>
+
+    <label>Student Name:</label>
+    <input type="text" id="studentName">
+
+    <label>Book Name:</label>
+    <input type="text" id="bookName">
+
+    <label>Book Category:</label>
+    <select id="category">
+        <option>Computer Science</option>
+        <option>Mathematics</option>
+        <option>Engineering</option>
+        <option>General Knowledge</option>
+    </select>
+
+    <label>Issue Date:</label>
+    <input type="date" id="issueDate">
+
+    <label>Return Date:</label>
+    <input type="date" id="returnDate">
+
+    <button onclick="issueBook()">Issue Book</button>
+
+    <button onclick="searchBook()">Search Book</button>
+
+    <p id="result"></p>
+
+</div>
+
+<script>
+
+function issueBook() {
+
+    var student = document.getElementById("studentName").value;
+    var book = document.getElementById("bookName").value;
+    var issue = document.getElementById("issueDate").value;
+    var returnDate = document.getElementById("returnDate").value;
+
+    if(student == "" || book == "" || issue == "" || returnDate == "") {
+        alert("Please fill all details");
+    }
+    else {
+        document.getElementById("result").innerHTML =
+        "Book Issued Successfully!<br>" +
+        "Student: " + student + "<br>" +
+        "Book: " + book + "<br>" +
+        "Issue Date: " + issue + "<br>" +
+        "Return Date: " + returnDate;
+    }
+}
+
+function searchBook() {
+
+    var book = document.getElementById("bookName").value;
+
+    if(book == "") {
+        alert("Enter book name to search");
+    }
+    else {
+        document.getElementById("result").innerHTML =
+        "Book Available: " + book;
+    }
+}
+
+</script>
+
+</body>
+</html>
