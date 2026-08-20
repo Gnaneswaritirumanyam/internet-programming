@@ -1,0 +1,83 @@
+ALGORITHM Retrieve_Data_From_Database(searchValue)
+
+BEGIN
+
+    connection ← NULL
+
+    statement ← NULL
+
+    resultSet ← NULL
+
+
+    TRY
+
+        driver ← LOAD_DATABASE_DRIVER()
+
+        connection ← OPEN_CONNECTION(DB_URL, USERNAME, PASSWORD)
+
+
+        IF connection failed THEN
+
+            DISPLAY "Database connection failed"
+
+            STOP
+
+        ENDIF
+
+
+        sql ← "SELECT id, name, email FROM users WHERE status = ?"
+
+        statement ← PREPARE_STATEMENT(connection, sql)
+
+        SET_PARAMETER(statement, 1, searchValue)
+
+
+        resultSet ← EXECUTE_QUERY(statement)
+
+
+        recordFound ← FALSE
+
+
+        WHILE resultSet.HAS_NEXT() DO
+
+            recordFound ← TRUE
+
+            row ← resultSet.NEXT()
+
+
+            id ← row.GET("id")
+
+            name ← row.GET("name")
+
+            email ← row.GET("email")
+
+
+            DISPLAY id, name, email
+
+        ENDWHILE
+
+
+        IF recordFound = FALSE THEN
+
+            DISPLAY "No matching records found"
+
+        ENDIF
+
+
+    CATCH databaseError
+
+        LOG databaseError
+
+        DISPLAY "Unable to retrieve data"
+
+    FINALLY
+
+        IF resultSet ≠ NULL THEN CLOSE(resultSet)
+
+        IF statement ≠ NULL THEN CLOSE(statement)
+
+        IF connection ≠ NULL THEN CLOSE(connection)
+
+    ENDTRY
+
+END
