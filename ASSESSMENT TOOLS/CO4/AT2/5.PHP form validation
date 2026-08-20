@@ -1,0 +1,108 @@
+ALGORITHM Validate_PHP_Form(POST)
+
+BEGIN
+
+    errors ← EMPTY_LIST
+
+
+    IF request method ≠ "POST" THEN
+
+        DISPLAY form
+
+        STOP
+
+    ENDIF
+
+
+    name ← TRIM(POST["name"])
+
+    email ← TRIM(POST["email"])
+
+    password ← POST["password"]
+
+    confirmPassword ← POST["confirm_password"]
+
+
+    IF name is EMPTY THEN
+
+        ADD "Name is required" TO errors
+
+    ELSE
+
+        name ← SANITIZE_TEXT(name)
+
+    ENDIF
+
+
+    IF email is EMPTY THEN
+
+        ADD "Email is required" TO errors
+
+    ELSE IF NOT VALID_EMAIL_FORMAT(email) THEN
+
+        ADD "Enter a valid email address" TO errors
+
+    ENDIF
+
+
+    IF password is EMPTY THEN
+
+        ADD "Password is required" TO errors
+
+    ELSE
+
+        IF LENGTH(password) < 8 THEN
+
+            ADD "Password must contain at least 8 characters" TO errors
+
+        ENDIF
+
+        IF password has no uppercase letter THEN
+
+            ADD "Password must contain an uppercase letter" TO errors
+
+        ENDIF
+
+        IF password has no lowercase letter THEN
+
+            ADD "Password must contain a lowercase letter" TO errors
+
+        ENDIF
+
+        IF password has no digit THEN
+
+            ADD "Password must contain a number" TO errors
+
+        ENDIF
+
+    ENDIF
+
+
+    IF password ≠ confirmPassword THEN
+
+        ADD "Passwords do not match" TO errors
+
+    ENDIF
+
+
+    IF SIZE(errors) > 0 THEN
+
+        FOR EACH error IN errors DO
+
+            DISPLAY error
+
+        ENDFOR
+
+        DISPLAY form with previously safe values
+
+    ELSE
+
+        passwordHash ← HASH_PASSWORD(password)
+
+        SAVE_OR_PROCESS(name, email, passwordHash)
+
+        DISPLAY "Form submitted successfully"
+
+    ENDIF
+
+END
