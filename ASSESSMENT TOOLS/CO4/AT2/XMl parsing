@@ -1,0 +1,77 @@
+ALGORITHM Parse_XML_Document(xmlFile)
+
+BEGIN
+
+    IF xmlFile does not exist THEN
+
+        DISPLAY "Error: XML file not found"
+
+        STOP
+
+    ENDIF
+
+
+    TRY
+
+        xmlDoc ← LOAD_AND_PARSE_XML(xmlFile)
+
+    CATCH parsingError
+
+        DISPLAY "Error: Invalid or malformed XML"
+
+        STOP
+
+    ENDTRY
+
+
+    root ← GET_ROOT_ELEMENT(xmlDoc)
+
+    DISPLAY "Root Element: " + root.name
+
+
+    CALL Traverse_Node(root, 0)
+
+END
+
+
+PROCEDURE Traverse_Node(node, level)
+
+BEGIN
+
+    indent ← REPEAT("  ", level)
+
+
+    IF node is an ELEMENT THEN
+
+        DISPLAY indent + "<" + node.name + ">"
+
+
+        FOR EACH attribute IN node.attributes DO
+
+            DISPLAY indent + "  @" + attribute.name + " = " + attribute.value
+
+        ENDFOR
+
+
+        IF node contains meaningful TEXT THEN
+
+            value ← TRIM(node.text)
+
+            DISPLAY indent + "  Value: " + value
+
+        ENDIF
+
+
+        FOR EACH child IN node.childNodes DO
+
+            IF child is an ELEMENT THEN
+
+                CALL Traverse_Node(child, level + 1)
+
+            ENDIF
+
+        ENDFOR
+
+    ENDIF
+
+END
