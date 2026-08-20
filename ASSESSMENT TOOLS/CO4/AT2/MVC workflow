@@ -1,0 +1,72 @@
+ALGORITHM MVC_Request_Workflow(request)
+
+BEGIN
+
+    userRequest ← RECEIVE_HTTP_REQUEST(request)
+
+    route ← IDENTIFY_ROUTE(userRequest.URL, userRequest.method)
+
+
+    controller ← SELECT_CONTROLLER(route)
+
+
+    IF controller is NOT FOUND THEN
+
+        RETURN HTTP_404_RESPONSE
+
+    ENDIF
+
+
+    validatedInput ← controller.VALIDATE(userRequest.parameters)
+
+
+    IF validatedInput is INVALID THEN
+
+        viewData ← CREATE_ERROR_MESSAGES()
+
+        response ← RENDER_VIEW("errorView", viewData)
+
+        RETURN response
+
+    ENDIF
+
+
+    action ← controller.SELECT_ACTION(route)
+
+
+    IF action requires data THEN
+
+        model ← controller.SELECT_MODEL()
+
+        modelResult ← model.PROCESS_BUSINESS_LOGIC(validatedInput)
+
+
+        IF database access is required THEN
+
+            dbConnection ← OPEN_DATABASE_CONNECTION()
+
+            data ← EXECUTE_MODEL_QUERY(dbConnection, modelResult)
+
+            CLOSE_DATABASE_CONNECTION(dbConnection)
+
+            modelResult ← FORMAT_DATA(data)
+
+        ENDIF
+
+    ELSE
+
+        modelResult ← EMPTY_DATA
+
+    ENDIF
+
+
+    view ← SELECT_VIEW(action)
+
+    responseBody ← view.RENDER(modelResult)
+
+    response ← CREATE_HTTP_RESPONSE(responseBody, status=200)
+
+
+    SEND response TO browser
+
+END
