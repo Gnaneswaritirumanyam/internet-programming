@@ -1,0 +1,73 @@
+ALGORITHM JSP_Request_Response_Flow(request)
+
+BEGIN
+
+    browser SENDS HTTP request TO webServer
+
+
+    webServer FORWARDS request TO servletContainer
+
+
+    resource ← MAP_REQUEST_URL(request.URL)
+
+
+    IF resource is a Servlet THEN
+
+        servlet ← LOAD_SERVLET(resource)
+
+
+        IF servlet is not initialized THEN
+
+            CALL servlet.init()
+
+        ENDIF
+
+
+        CALL servlet.service(request, response)
+
+        servlet MAY:
+
+            READ request parameters
+
+            VALIDATE input
+
+            CALL JavaBean/service/DAO
+
+            ACCESS database using JDBC
+
+            STORE result in request/session scope
+
+            FORWARD request TO JSP
+
+    ENDIF
+
+
+    IF resource is JSP OR request is forwarded to JSP THEN
+
+        IF JSP has not been compiled OR JSP was modified THEN
+
+            TRANSLATE JSP into Servlet source
+
+            COMPILE generated Servlet
+
+            LOAD and INITIALIZE generated Servlet
+
+        ENDIF
+
+
+        EXECUTE generated JSP Servlet
+
+        READ attributes from request/session/application
+
+        GENERATE dynamic HTML content
+
+    ENDIF
+
+
+    SET HTTP status and response headers
+
+    SEND generated HTML response TO browser
+
+    browser RENDERS page
+
+END
